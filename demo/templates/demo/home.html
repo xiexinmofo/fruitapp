@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block js %}
+    <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/slide.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">优选生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">优选会员</a></li>
+			</ul>
+		</div>
+	</div>
+    <div class="center_con clearfix">
+		<ul class="subnav fl">
+			<li><a href="#model01" class="fruit">新鲜水果</a></li>
+			<li><a href="#model03" class="meet">精品肉类</a></li>
+			<li><a href="#model02" class="seafood">海鲜水产</a></li>
+			<li><a href="#model04" class="egg">禽类蛋品</a></li>
+			<li><a href="#model05" class="vegetables">新鲜蔬菜</a></li>
+			<li><a href="#model06" class="ice">速冻食品</a></li>
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+				<li><img src="{% static 'fruitapp/images/slide.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'fruitapp/images/slide02.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'fruitapp/images/slide03.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'fruitapp/images/slide04.jpg' %}" alt="幻灯片"></li>
+
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+			<a href="#"><img src="{% static 'fruitapp/images/adv01.jpg' %}"></a>
+			<a href="#"><img src="{% static 'fruitapp/images/adv02.jpg' %}"></a>
+
+		</div>
+	</div>
+    
+    {% for foo in type %}
+        <div class="list_model">
+        <div class="list_title clearfix">
+            <h3 class="fl" id='model0{{ foo.id }}'>{{ foo.title }}</h3>
+            <div class="subtitle fl">
+                <span>|</span>
+                <a href=""></a>
+                <a href=""></a>
+                <a href=""></a>
+            </div>
+            <a href="" class="goods_more fr" >查看更多</a>
+        </div>
+        <div class="goods_con clearfix">
+            <div class="goods_banner fl">
+{#                cut 模板过滤器 可以移除变量中指定的字符#}
+                <img src="{% static foo.picture|cut:"static/" %}" alt="">
+            </div>
+            <ul class="goods_list fl" id="{{ foo.id }}">
+                <p>{{ foo.id }}</p>
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}
+{% block foot_js %}
+    <script>
+        {# 若要在for循环中使用ajax  ,回调函数要使用递归 #}
+    $(function () {
+        var id_list=$(".fl").find("p").text();
+        var currentIndex=1;
+{#        var len={{ type }}.length#}
+        var len=6;
+        function newRequest(){
+            if(currentIndex>len){
+                return;
+            }
+            $.ajax({
+            url: '{% url "demo:json_response" %}',
+            data:{'id':currentIndex},
+            datatype:'json',
+            type:'POST',
+            success:function (data) {
+
+                for (var j = 0; j < data.length; j++) {
+
+                    var name = data[j].name;
+                    var img = data[j].img;
+                    var price = data[j].price;
+                    $("#"+currentIndex).append("<li><h4><a href=''>"+name+"</a></h4><a href=''><img src='/"+img+"'><a/><div class='prize'> ￥"+price+"</div></li>");
+                    {# src后加'/',将路径指向根目录而不是相对路径 #}
+                }
+                currentIndex++;
+                newRequest();
+            }
+            });
+        }
+    newRequest();
+    });
+
+    </script>
+{% endblock %}
