@@ -64,7 +64,7 @@
                 <img src="{% static foo.picture|cut:"static/" %}" alt="">
             </div>
             <ul class="goods_list fl" id="{{ foo.id }}">
-                <p>{{ foo.id }}</p>
+                <p style="display: none">{{ foo.id }}</p>
             </ul>
         </div>
     </div>
@@ -75,7 +75,7 @@
     <script>
         {# 若要在for循环中使用ajax  ,回调函数要使用递归 #}
     $(function () {
-        var id_list=$(".fl").find("p").text();
+{#        var id_list=$(".fl").find("p").text();#}
         var currentIndex=1;
 {#        var len={{ type }}.length#}
         var len=6;
@@ -90,14 +90,25 @@
             type:'POST',
             success:function (data) {
 
-                for (var j = 0; j < data.length; j++) {
+{#                for (var j = 0; j < data.length; j++) {#}
+{##}
+{#                    var name = data[j].name;#}
+{#                    var img = data[j].img;#}
+{#                    var price = data[j].price;#}
+{#                    $("#"+currentIndex).append("<li><h4><a href=''>"+name+"</a></h4><a href=''><img src='/"+img+"'><a/><div class='prize'> ￥"+price+"</div></li>");#}
+{#                     src后加'/',将路径指向根目录而不是相对路径 #}
+{#                }#}
+                $.each(data,function (i,item) {
+                    var name=item.name;
+                    var img=item.img;
+                    var price=item.price;
+                    console.log(item);
+                    var url=""+item.good_id;
+                    console.log(url);
+                    $("#"+currentIndex).append("<li><h4><a href=''>"+name+"</a></h4><a href="+url+"><img src='/"+img+"'><a/><div class='prize'> ￥"+price+"</div></li>")
 
-                    var name = data[j].name;
-                    var img = data[j].img;
-                    var price = data[j].price;
-                    $("#"+currentIndex).append("<li><h4><a href=''>"+name+"</a></h4><a href=''><img src='/"+img+"'><a/><div class='prize'> ￥"+price+"</div></li>");
-                    {# src后加'/',将路径指向根目录而不是相对路径 #}
-                }
+                    }
+                );
                 currentIndex++;
                 newRequest();
             }

@@ -27,4 +27,3 @@ class Goods(models.Model):
 
 
 
-

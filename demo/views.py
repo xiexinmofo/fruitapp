@@ -35,11 +35,16 @@ def json_response(request):
             #price = DecimalEncoder(good.price)
             #print(price)
             print(str(good.price))
-            good_info={'name':good.title,'price':str(good.price),'img':good.picture.url}
+            good_info={'good_id':good.id,'name':good.title,'price':str(good.price),'img':good.picture.url}
             goods_list.append(good_info)
 
     return HttpResponse(json.dumps(goods_list),content_type='application/json')
 
 
+def good_detail(request,id=None):
+    good=get_object_or_404(Goods,pk=id)
+    if good :
+        result={'good':good}
+    return render(request,'demo/detail.html',result)
 
 

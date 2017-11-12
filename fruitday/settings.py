@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    ''
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'demo.apps.DemoConfig',
+    'haystack',
+
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -135,3 +138,15 @@ STATIC_ROOT=os.path.join(BASE_DIR,'static/')
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'demo/static/')
 ]
+
+HAYSTACK_CONNECTIONS={
+    'default':{
+        'ENGINE':'demo.whoosh_cn_backend.WhooshEngine',
+        #指定搜索引擎使用的索引文件路径
+        'PATH':os.path.join(BASE_DIR,'whoosh_index'),
+
+    }
+}
+
+#自动更新索引
+HAYSTACK_SIGNAL_PROCESSOR='haystack.signals.RealtimeSignalProcessor'

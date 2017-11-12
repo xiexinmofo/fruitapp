@@ -20,5 +20,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^demo/',include('demo.urls',namespace='demo')),
-    url(r'myuser',include('myuser.urls',namespace='myuser')),
+    url(r'^search/',include('haystack.urls')),
+
 ]
